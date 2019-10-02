@@ -1,0 +1,17 @@
+<Glabels-templates>
+  
+  <Template name="szsm-1" size="A4" _description="Mailing labels">
+    <Label-rectangle id="0" width="189.0" height="130.4" round="7">
+      <Markup-margin size="5"/>
+      <Layout nx="3" ny="6" x0="14" y0="28" dx="189.0" dy="130.4"/>
+    </Label-rectangle>
+  </Template>
+  
+  <Template name="szsm-2" size="A4" _description="Mailing Labels-3 columns">
+  <Label-rectangle width="199" height="420" round="0" id="0">
+   <Markup-margin size="5"/>
+   <Layout dx="199" dy="420" nx="3" ny="2" y0="0" x0="0"/>
+  </Label-rectangle>
+ </Template>
+ 
+</Glabels-templates>
