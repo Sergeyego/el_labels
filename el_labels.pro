@@ -30,3 +30,8 @@ FORMS    += mainwidget.ui \
 
 RESOURCES += \
     res.qrc
+
+DISTFILES += \
+    templates/glabels_szsm.xml \
+    templates/szsm.xml \
+    runlbl.sh
