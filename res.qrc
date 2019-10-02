@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/new.png</file>
+        <file>images/paste.png</file>
+        <file>images/print.png</file>
+        <file>images/save.png</file>
+        <file>images/logotip.png</file>
+        <file>images/0.png</file>
+        <file>images/1.png</file>
+        <file>images/2.png</file>
+        <file>images/3.png</file>
+        <file>images/4.png</file>
+        <file>images/5.png</file>
+        <file>images/6.png</file>
+        <file>images/rum.png</file>
+        <file>images/zont.png</file>
+    </qresource>
+</RCC>
