@@ -25,7 +25,7 @@ void LblEngine::createLblSmall(QString text, QString barcode)
 void LblEngine::createlblBig(int id_part, QString tuList, QString infoList)
 {
     QSqlQuery query;
-    query.prepare("select COALESCE(e.marka_sert, e.marka), p.diam, g.nam, pu.nam, COALESCE(p.ibco,d.nam), e.vl, e.pr, e.id_pic "
+    query.prepare("select COALESCE(e.marka_sert, e.marka), p.diam, g.nam, pu.nam, COALESCE(p.ibco,d.nam), e.vl, e.pr2, e.id_pic "
                   "from parti as p "
                   "inner join elrtr as e on p.id_el=e.id "
                   "inner join gost_types as g on e.id_gost_type=g.id "
@@ -118,12 +118,14 @@ void LblEngine::createlblBig(int id_part, QString tuList, QString infoList)
             t+=tr("Допустимое содержание влаги перед использованием до ")+query.value(5).toString()+"%\n";
         }
         if (!query.value(6).isNull()){
-            QString pr=query.value(6).toString();
-            QString temp=pr.left(3);
-            QString dop=pr.mid(3,2);
-            QString ch=pr.mid(5,1);
-            QString ok=pr.mid(6,2);
-            t+=tr("Прокалка перед сваркой - ")+temp+/*tr("±")+dop+*/tr("°C ")+ch+tr(" час")+ok;
+            QStringList list=query.value(6).toString().split(":");
+            if (list.size()==4){
+                QString temp=list.at(0);
+                //QString dop=list.at(1);
+                QString ch=list.at(2);
+                QString ok=list.at(3);
+                t+=tr("Прокалка перед сваркой - ")+temp+/*tr("±")+dop+*/tr("°C ")+ch+tr(" ")+ok;
+            }
         }
 
         lbl.newText(31,36.2,69,5,t,6,false,(Qt::AlignLeft | Qt::AlignVCenter));

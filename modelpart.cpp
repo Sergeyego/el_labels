@@ -15,11 +15,12 @@ QVariant ModelPart::data(const QModelIndex &item, int role) const
 
 void ModelPart::refresh()
 {
-    setQuery("select p.id, p.n_s, p.dat_part, e.marka, p.diam, i.nam, e.tip, a.nam "
+    setQuery("select p.id, p.n_s, p.dat_part, e.marka, p.diam, i.nam, e.tip, a.nam, ep.mass_ed "
              "from parti as p "
              "inner join elrtr as e on p.id_el=e.id "
              "inner join istoch as i on p.id_ist=i.id "
              "inner join aws_types as a on a.id=e.id_aws_type "
+             "inner join el_pack as ep on ep.id=p.id_pack "
              "where p.dat_part between '"+dBeg.toString("yyyy-MM-dd")+"' and '"+dEnd.toString("yyyy-MM-dd")+"' "
              "order by p.dat_part, p.n_s");
     if (lastError().isValid()){

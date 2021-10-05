@@ -27,6 +27,7 @@ MainWidget::MainWidget(QWidget *parent) :
     mapper->addMapping(ui->dateEdit,2);
     mapper->addMapping(ui->lineEditType,6);
     mapper->addMapping(ui->lineEditAws,7);
+    mapper->addMapping(ui->doubleSpinBoxMas,8);
     ui->tableViewPart->verticalHeader()->setDefaultSectionSize(ui->tableViewPart->verticalHeader()->fontMetrics().height()*1.5);
     ui->tableViewPart->verticalHeader()->hide();
     ui->tableViewPart->setModel(modelPart);
@@ -38,6 +39,7 @@ MainWidget::MainWidget(QWidget *parent) :
     ui->tableViewPart->setColumnWidth(5,90);
     ui->tableViewPart->setColumnHidden(6,true);
     ui->tableViewPart->setColumnHidden(7,true);
+    ui->tableViewPart->setColumnHidden(8,true);
     connect(ui->cmdUpd,SIGNAL(clicked()),modelPart,SLOT(refresh()));
     connect(ui->dateEditBeg,SIGNAL(dateChanged(QDate)),modelPart,SLOT(setDBeg(QDate)));
     connect(ui->dateEditEnd,SIGNAL(dateChanged(QDate)),modelPart,SLOT(setDEnd(QDate)));
@@ -65,11 +67,6 @@ void MainWidget::updData(QModelIndex index)
     int id_part=ui->tableViewPart->model()->data(ui->tableViewPart->model()->index(index.row(),0),Qt::EditRole).toInt();
     modelTu->refresh(id_part);
     modelSert->refresh(id_part);
-    double diam=ui->tableViewPart->model()->data(ui->tableViewPart->model()->index(index.row(),4)).toDouble();
-    QString ves;
-    if (diam==2.5 || diam==3) ves="4";
-    if (diam==4) ves="5,5";
-    ui->lineEditVes->setText(ves);
 }
 
 void MainWidget::createLblSmall()
@@ -94,7 +91,7 @@ void MainWidget::createLblSmall()
     strDat+=ved+"\n";
     strDat+=getTuList();
     strDat+=tr("Масса нетто, кг - ");
-    strDat+=ui->lineEditVes->text();
+    strDat+=QLocale().toString(ui->doubleSpinBoxMas->value(),'f',1);
     LblEngine e;
     e.createLblSmall(strDat,QString());
 }
@@ -113,7 +110,7 @@ void MainWidget::createLblBig()
     strDat+=tr("Дата изг. - ");
     strDat+=ui->dateEdit->date().toString("dd.MM.yyyy")+"\n";
     strDat+=tr("Масса нетто, кг - ");
-    strDat+=ui->lineEditVes->text();
+    strDat+=QLocale().toString(ui->doubleSpinBoxMas->value(),'f',1);
     LblEngine e;
     e.createlblBig(id_part,getTuList(),strDat);
 }

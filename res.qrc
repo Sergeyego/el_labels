@@ -1,10 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/new.png</file>
-        <file>images/paste.png</file>
-        <file>images/print.png</file>
-        <file>images/save.png</file>
-        <file>images/logotip.png</file>
         <file>images/0.png</file>
         <file>images/1.png</file>
         <file>images/2.png</file>
@@ -14,5 +9,8 @@
         <file>images/6.png</file>
         <file>images/rum.png</file>
         <file>images/zont.png</file>
+        <file>images/simb.png</file>
+        <file>images/site.png</file>
+        <file>images/simb_labl.png</file>
     </qresource>
 </RCC>
