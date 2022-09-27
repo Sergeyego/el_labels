@@ -82,7 +82,7 @@ void ModelSert::refresh(int id_parti)
              "from zvd_get_sert_var((select dat_part from parti where id = "+id_part+" ), "
              "(select id_el from parti where id = "+id_part+" ), "
              "(select d.id from diam as d where d.diam = (select diam from parti where id = "+id_part+" )), "
-             "(select id_var from parti where id = "+id_part+" ) ) as z order by z.ved_short");
+             "(select id_var from parti where id = "+id_part+" ) ) as z where z.en = true order by z.ved_short");
     if (lastError().isValid())
         QMessageBox::critical(NULL,"Error",lastError().text(),QMessageBox::Ok);
 }
