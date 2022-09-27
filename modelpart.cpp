@@ -54,12 +54,14 @@ void ModelTu::refresh(int id_part)
     //qDebug()<<id_part;
     QSqlQuery tuQuery;
         tuQuery.prepare("select nam "
-                        "from zvd_get_tu((select dat_part from parti where id = :id1 ), "
+                        "from zvd_get_tu_var((select dat_part from parti where id = :id1 ), "
                         "(select id_el from parti where id = :id2 ), "
-                        "(select d.id from diam as d where d.diam = (select diam from parti where id = :id3 )) ) ");
+                        "(select d.id from diam as d where d.diam = (select diam from parti where id = :id3 )), "
+                        "(select id_var from parti where id = :id4 ) ) ");
         tuQuery.bindValue(":id1",id_part);
         tuQuery.bindValue(":id2",id_part);
         tuQuery.bindValue(":id3",id_part);
+        tuQuery.bindValue(":id4",id_part);
     if (tuQuery.exec()){
         setQuery(tuQuery);
     } else {
@@ -77,9 +79,10 @@ void ModelSert::refresh(int id_parti)
 {
     QString id_part=QString::number(id_parti);
     setQuery("select distinct z.ved_short "
-             "from zvd_get_sert((select dat_part from parti where id = "+id_part+" ), "
+             "from zvd_get_sert_var((select dat_part from parti where id = "+id_part+" ), "
              "(select id_el from parti where id = "+id_part+" ), "
-             "(select d.id from diam as d where d.diam = (select diam from parti where id = "+id_part+" )) ) as z order by z.ved_short");
+             "(select d.id from diam as d where d.diam = (select diam from parti where id = "+id_part+" )), "
+             "(select id_var from parti where id = "+id_part+" ) ) as z order by z.ved_short");
     if (lastError().isValid())
         QMessageBox::critical(NULL,"Error",lastError().text(),QMessageBox::Ok);
 }

@@ -25,12 +25,13 @@ void LblEngine::createLblSmall(QString text, QString barcode)
 void LblEngine::createlblBig(int id_part, QString tuList, QString infoList)
 {
     QSqlQuery query;
-    query.prepare("select COALESCE(e.marka_sert, e.marka), p.diam, g.nam, pu.nam, COALESCE(p.ibco,d.nam), e.vl, e.pr2, e.id_pic "
+    query.prepare("select COALESCE(e.marka_sert, e.marka), p.diam, g.nam, pu.nam, COALESCE(p.ibco,ev.znam), e.vl, ev.proc, e.id_pic "
                   "from parti as p "
                   "inner join elrtr as e on p.id_el=e.id "
                   "inner join gost_types as g on e.id_gost_type=g.id "
                   "inner join purpose as pu on e.id_purpose=pu.id "
                   "inner join denominator as d on e.id_denominator=d.id "
+                  "left join el_var ev on ev.id_var = p.id_var and ev.id_el = p.id_el "
                   "where p.id = :id");
     query.bindValue(":id",id_part);
     if (!query.exec()){
@@ -41,19 +42,22 @@ void LblEngine::createlblBig(int id_part, QString tuList, QString infoList)
     queryAmp.prepare("(select distinct d.diam, a.bot, a.vert, a.ceil "
                      "from amp as a "
                      "inner join diam as d on a.id_diam = d.id "
-                     "where a.id_el = (select id_el from parti where id = :id1 ) and d.diam = (select diam from parti where id = :id2 ) order by d.diam) "
+                     "where a.id_el = (select id_el from parti where id = :id1 ) and d.diam = (select diam from parti where id = :id2 ) "
+                     "and a.id_var = (select id_var from parti where id = :id3 ) order by d.diam) "
                      "union "
                      "(select distinct d.diam, a.bot, a.vert, a.ceil "
                      "from amp as a "
                      "inner join diam as d on a.id_diam = d.id "
-                     "where a.id_el = (select id_el from parti where id = :id3 ) and d.diam < (select diam from parti where id = :id4 ) order by d.diam DESC LIMIT 1) "
+                     "where a.id_el = (select id_el from parti where id = :id4 ) and d.diam < (select diam from parti where id = :id5 ) "
+                     "and a.id_var = (select id_var from parti where id = :id6 ) order by d.diam DESC LIMIT 1) "
                      "union "
                      "(select distinct d.diam, a.bot, a.vert, a.ceil "
                      "from amp as a "
                      "inner join diam as d on a.id_diam = d.id "
-                     "where a.id_el = (select id_el from parti where id = :id5 ) and d.diam > (select diam from parti where id = :id6 ) order by d.diam LIMIT 2) "
+                     "where a.id_el = (select id_el from parti where id = :id7 ) and d.diam > (select diam from parti where id = :id8 ) "
+                     "and a.id_var = (select id_var from parti where id = :id9 ) order by d.diam LIMIT 2) "
                      "order by diam LIMIT 4");
-    for (int i=0; i<6; i++){
+    for (int i=0; i<9; i++){
         queryAmp.bindValue(":id"+QString::number(i+1),id_part);
     }
     if (!queryAmp.exec()){
@@ -117,15 +121,10 @@ void LblEngine::createlblBig(int id_part, QString tuList, QString infoList)
         if (!query.value(5).isNull()){
             t+=tr("Допустимое содержание влаги перед использованием до ")+query.value(5).toString()+"%\n";
         }
-        if (!query.value(6).isNull()){
-            QStringList list=query.value(6).toString().split(":");
-            if (list.size()==4){
-                QString temp=list.at(0);
-                //QString dop=list.at(1);
-                QString ch=list.at(2);
-                QString ok=list.at(3);
-                t+=tr("Прокалка перед сваркой - ")+temp+/*tr("±")+dop+*/tr("°C ")+ch+tr(" ")+ok;
-            }
+        QString proc=query.value(6).toString();
+        if (!proc.isEmpty()){
+            proc=proc.replace(QRegExp("±\\d+"),"");
+            t+=tr("Прокалка перед сваркой - ")+proc;
         }
 
         lbl.newText(31,36.2,69,5,t,6,false,(Qt::AlignLeft | Qt::AlignVCenter));
